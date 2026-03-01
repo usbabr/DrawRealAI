@@ -126,7 +126,7 @@ export default function HomeScreen() {
             <View style={s.header}>
                 {/* Logo */}
                 <View style={s.logoBlock}>
-                    <Image source={require('../assets/logo_transparent.png')} style={s.logoImage} resizeMode="contain" />
+                    <Image source={require('../assets/logo.png')} style={s.logoImage} resizeMode="contain" />
                     <Text style={s.logoTagline}>Your child draws it. AI realizes it.</Text>
                 </View>
                 {/* Credits */}

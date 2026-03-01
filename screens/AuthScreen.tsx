@@ -36,7 +36,7 @@ export default function AuthScreen() {
 
                 {/* Logo */}
                 <View style={s.logoArea}>
-                    <Image source={require('../assets/logo_transparent.png')} style={s.mainLogoImage} resizeMode="contain" />
+                    <Image source={require('../assets/logo.png')} style={s.mainLogoImage} resizeMode="contain" />
                     <Text style={[s.tagline, { color: colors.textSecondary }]}>Turn children's drawings into{'\n'}stunning AI masterpieces ✨</Text>
                 </View>
 

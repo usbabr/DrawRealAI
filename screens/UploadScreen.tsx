@@ -96,31 +96,28 @@ export default function UploadScreen() {
 
                 <ScrollView style={s.scroll} showsVerticalScrollIndicator={false}>
 
-                    {/* Upload Box */}
-                    <View style={s.uploadSection}>
-                        <TouchableOpacity
-                            style={s.uploadBox}
-                            onPress={pickFromGallery}
-                            activeOpacity={0.8}
-                        >
-                            {selectedImage ? (
-                                <>
-                                    <Image source={{ uri: selectedImage }} style={s.uploadedImg} resizeMode="cover" />
-                                    <TouchableOpacity style={s.changeBtn} onPress={pickFromCamera}>
-                                        <Text style={s.changeTxt}>📷 Retake</Text>
-                                    </TouchableOpacity>
-                                </>
-                            ) : (
-                                <>
-                                    <View style={s.uploadIconCircle}>
-                                        <MaterialIcons name="add-photo-alternate" size={32} color={colors.primary} />
-                                    </View>
-                                    <Text style={s.uploadTxt}>Tap to upload drawing</Text>
-                                    <Text style={s.uploadSub}>or tap below to scan with camera</Text>
-                                </>
-                            )}
+                    {/* Upload Buttons */}
+                    <View style={s.uploadRow}>
+                        <TouchableOpacity style={[s.uploadBtn, s.cameraBtn]} onPress={pickFromCamera} activeOpacity={0.85}>
+                            <MaterialIcons name="photo-camera" size={36} color="#fff" />
+                            <Text style={s.uploadLabel}>Scan Drawing</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={[s.uploadBtn, s.galleryBtn]} onPress={pickFromGallery} activeOpacity={0.85}>
+                            <MaterialIcons name="image" size={36} color="#fff" />
+                            <Text style={s.uploadLabel}>Upload Photo</Text>
                         </TouchableOpacity>
                     </View>
+
+                    {/* Preview */}
+                    {selectedImage ? (
+                        <Image source={{ uri: selectedImage }} style={s.preview} resizeMode="cover" />
+                    ) : (
+                        <View style={s.previewEmpty}>
+                            <MaterialIcons name="add-photo-alternate" size={48} color={colors.border} />
+                            <Text style={s.previewEmptyText}>Your drawing will appear here</Text>
+                        </View>
+                    )}
 
                     {/* Hint Input */}
                     <View style={s.section}>
@@ -173,16 +170,17 @@ export default function UploadScreen() {
                     <TouchableOpacity
                         onPress={handleGenerate}
                         activeOpacity={0.88}
-                        style={[s.submitBtn, !selectedImage && s.submitBtnDisabled]}
+                        style={[s.generateWrapper, !selectedImage && s.generateDisabled]}
                         disabled={!selectedImage}
                     >
                         <LinearGradient
                             colors={[colors.primary, colors.purple]}
                             start={{ x: 0, y: 0 }}
                             end={{ x: 1, y: 0 }}
-                            style={StyleSheet.absoluteFillObject}
-                        />
-                        <Text style={s.submitTxt}>Bring to Life ✨</Text>
+                            style={s.generateBtn}
+                        >
+                            <Text style={s.generateText}>Bring to Life ✨</Text>
+                        </LinearGradient>
                     </TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>
@@ -207,32 +205,37 @@ const getStyles = (colors: any) => StyleSheet.create({
     headerTitle: { fontFamily: theme.fonts.bold, fontSize: 18, color: colors.textPrimary },
     headerRight: { width: 40 },
     scroll: { flex: 1 },
-    uploadSection: {
-        alignItems: 'center', marginTop: 20, paddingHorizontal: 20,
+    // Upload buttons
+    uploadRow: { flexDirection: 'row', gap: 14, marginBottom: 20, paddingHorizontal: 20, marginTop: 20 },
+    uploadBtn: {
+        flex: 1, height: 130,
+        borderRadius: theme.radius.lg,
+        alignItems: 'center', justifyContent: 'center', gap: 8,
     },
-    uploadBox: {
-        width: '100%', aspectRatio: 4 / 3,
-        backgroundColor: colors.fieldGray,
-        borderRadius: theme.radius.xl,
-        borderWidth: 2, borderColor: colors.border, borderStyle: 'dashed',
-        alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
+    cameraBtn: {
+        backgroundColor: colors.primary,
+        shadowColor: colors.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 8, elevation: 5,
     },
-    uploadedImg: { width: '100%', height: '100%' },
-    uploadIconCircle: {
-        width: 64, height: 64, borderRadius: 32,
-        backgroundColor: colors.white,
-        alignItems: 'center', justifyContent: 'center', marginBottom: 12,
-        shadowColor: colors.shadow, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 1, shadowRadius: 8, elevation: 4,
+    galleryBtn: {
+        backgroundColor: colors.purple,
+        shadowColor: colors.purple, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.25, shadowRadius: 8, elevation: 5,
     },
-    uploadTxt: { fontFamily: theme.fonts.bold, fontSize: 16, color: colors.textPrimary },
-    uploadSub: { fontFamily: theme.fonts.regular, fontSize: 13, color: colors.textMuted, marginTop: 4 },
+    uploadLabel: { fontFamily: theme.fonts.bold, fontSize: 13, color: '#fff' },
 
-    changeBtn: {
-        position: 'absolute', bottom: 16, right: 16,
-        backgroundColor: 'rgba(0,0,0,0.6)',
-        paddingHorizontal: 16, paddingVertical: 8, borderRadius: 99,
+    // Preview
+    preview: {
+        width: '100%', height: 200,
+        borderRadius: theme.radius.lg,
+        marginBottom: 20,
     },
-    changeTxt: { fontFamily: theme.fonts.medium, color: '#fff', fontSize: 13 },
+    previewEmpty: {
+        width: 'auto', height: 180, marginHorizontal: 20,
+        borderRadius: theme.radius.lg, borderWidth: 2, borderColor: colors.border, borderStyle: 'dashed',
+        backgroundColor: colors.fieldGray,
+        alignItems: 'center', justifyContent: 'center',
+        marginBottom: 20, gap: 8,
+    },
+    previewEmptyText: { fontFamily: theme.fonts.medium, fontSize: 13, color: colors.textMuted },
 
     section: { marginTop: 32, paddingHorizontal: 20 },
     sectionTitle: { fontFamily: theme.fonts.bold, fontSize: 18, color: colors.textPrimary, marginBottom: 16 },
@@ -270,15 +273,22 @@ const getStyles = (colors: any) => StyleSheet.create({
         backgroundColor: colors.cardBg,
         borderTopWidth: 1, borderColor: colors.border,
     },
-    submitBtn: {
-        flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10,
-        backgroundColor: colors.primary,
-        paddingVertical: 18, borderRadius: theme.radius.lg,
+    generateWrapper: {
+        borderRadius: theme.radius.lg,
+        overflow: 'hidden',
         shadowColor: colors.primary, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8, elevation: 5,
     },
-    submitBtnDisabled: {
-        backgroundColor: colors.border,
+    generateDisabled: {
+        opacity: 0.5,
         shadowOpacity: 0, elevation: 0,
     },
-    submitTxt: { fontFamily: theme.fonts.bold, fontSize: 18, color: colors.textPrimary },
+    generateBtn: {
+        paddingVertical: 18,
+        alignItems: 'center', justifyContent: 'center',
+    },
+    generateText: {
+        fontFamily: theme.fonts.bold,
+        fontSize: 18,
+        color: '#fff',
+    },
 });
