@@ -55,7 +55,7 @@ export default function CreditsScreen() {
         let paymentUrl = '';
         if (pkgId === 'starter') paymentUrl = `https://buy.stripe.com/test_starter`;
         else if (pkgId === 'pro') paymentUrl = `https://buy.stripe.com/test_pro`;
-        else paymentUrl = `https://buy.stripe.com/test_premium`;
+        else paymentUrl = `https://buy.stripe.com/bJeaEW2TIbqfdVa8Qr4ZG00`;
 
         if (Platform.OS === 'web') {
             const proceed = window.confirm(`Proceed to Stripe for package ${pkgId}?`);
