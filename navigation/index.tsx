@@ -14,6 +14,8 @@ import GalleryScreen from '../screens/GalleryScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import AuthScreen from '../screens/AuthScreen';
 import CreditsScreen from '../screens/CreditsScreen';
+import GalleryDetailScreen from '../screens/GalleryDetailScreen';
+import { useAppTheme } from '../context/ThemeContext';
 
 export type RootStackParamList = {
     Auth: undefined;
@@ -22,6 +24,7 @@ export type RootStackParamList = {
     Loading: { originalUri: string; style: string; hint?: string };
     Result: { originalUri: string; generatedUri: string; style: string };
     Credits: undefined;
+    GalleryDetail: { record: any };
 };
 
 export type TabParamList = {
@@ -44,12 +47,13 @@ const TAB_ICONS: Record<string, { active: any; inactive: any }> = {
 };
 
 function MainTabs() {
+    const { colors } = useAppTheme();
     return (
         <Tab.Navigator
             screenOptions={({ route }) => ({
                 headerShown: false,
                 tabBarShowLabel: true,
-                tabBarIcon: ({ focused, size }) => {
+                tabBarIcon: ({ focused }) => {
                     const icons = TAB_ICONS[route.name];
                     const iconName = focused ? icons.active : icons.inactive;
 
@@ -58,13 +62,13 @@ function MainTabs() {
                             <MaterialIcons
                                 name={iconName}
                                 size={28}
-                                color={focused ? theme.colors.primary : '#94A3B8'} // slate-400
+                                color={focused ? colors.primary : colors.textMuted}
                             />
                         </View>
                     );
                 },
-                tabBarActiveTintColor: theme.colors.primary,
-                tabBarInactiveTintColor: '#94A3B8',
+                tabBarActiveTintColor: colors.primary,
+                tabBarInactiveTintColor: colors.textMuted,
                 tabBarLabelStyle: {
                     fontFamily: theme.fonts.bold,
                     fontSize: 10,
@@ -74,9 +78,9 @@ function MainTabs() {
                     marginBottom: 6,
                 },
                 tabBarStyle: {
-                    backgroundColor: theme.colors.white, // background-light or white
+                    backgroundColor: colors.background,
                     borderTopWidth: 1,
-                    borderTopColor: theme.colors.border,
+                    borderTopColor: colors.border,
                     paddingTop: 10,
                     paddingBottom: 10,
                     height: 70,
@@ -120,6 +124,7 @@ export default function Navigation() {
                 <Stack.Screen name="Loading" component={LoadingScreen} options={{ gestureEnabled: false }} />
                 <Stack.Screen name="Result" component={ResultScreen} />
                 <Stack.Screen name="Credits" component={CreditsScreen} />
+                <Stack.Screen name="GalleryDetail" component={GalleryDetailScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );
