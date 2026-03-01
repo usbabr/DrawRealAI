@@ -1,0 +1,134 @@
+import React, { useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Text, ActivityIndicator, View, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { theme } from '../constants/theme';
+
+import HomeScreen from '../screens/HomeScreen';
+import UploadScreen from '../screens/UploadScreen';
+import LoadingScreen from '../screens/LoadingScreen';
+import ResultScreen from '../screens/ResultScreen';
+import GalleryScreen from '../screens/GalleryScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import AuthScreen from '../screens/AuthScreen';
+import CreditsScreen from '../screens/CreditsScreen';
+
+export type RootStackParamList = {
+    Auth: undefined;
+    Main: undefined;
+    Upload: undefined;
+    Loading: { originalUri: string; style: string; hint?: string };
+    Result: { originalUri: string; generatedUri: string; style: string };
+    Credits: undefined;
+};
+
+export type TabParamList = {
+    Home: undefined;
+    Create: undefined;
+    Gallery: undefined;
+    Profile: undefined;
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
+const Tab = createBottomTabNavigator<TabParamList>();
+
+import { MaterialIcons } from '@expo/vector-icons';
+
+const TAB_ICONS: Record<string, { active: any; inactive: any }> = {
+    Home: { active: 'home', inactive: 'home' },
+    Create: { active: 'auto-fix-high', inactive: 'auto-fix-high' }, // fallback if magic_button isn't in MaterialIcons
+    Gallery: { active: 'grid-view', inactive: 'grid-view' },
+    Profile: { active: 'person', inactive: 'person' },
+};
+
+function MainTabs() {
+    return (
+        <Tab.Navigator
+            screenOptions={({ route }) => ({
+                headerShown: false,
+                tabBarShowLabel: true,
+                tabBarIcon: ({ focused, size }) => {
+                    const icons = TAB_ICONS[route.name];
+                    const iconName = focused ? icons.active : icons.inactive;
+
+                    return (
+                        <View style={tabStyles.iconBase}>
+                            <MaterialIcons
+                                name={iconName}
+                                size={28}
+                                color={focused ? theme.colors.primary : '#94A3B8'} // slate-400
+                            />
+                        </View>
+                    );
+                },
+                tabBarActiveTintColor: theme.colors.primary,
+                tabBarInactiveTintColor: '#94A3B8',
+                tabBarLabelStyle: {
+                    fontFamily: theme.fonts.bold,
+                    fontSize: 10,
+                    textTransform: 'uppercase',
+                    letterSpacing: 0.5,
+                    marginTop: 0,
+                    marginBottom: 6,
+                },
+                tabBarStyle: {
+                    backgroundColor: theme.colors.white, // background-light or white
+                    borderTopWidth: 1,
+                    borderTopColor: theme.colors.border,
+                    paddingTop: 10,
+                    paddingBottom: 10,
+                    height: 70,
+                    elevation: 0,
+                    shadowOpacity: 0,
+                },
+                tabBarItemStyle: { paddingTop: 4, paddingBottom: 4 },
+            })}
+        >
+            <Tab.Screen name="Home" component={HomeScreen} />
+            <Tab.Screen name="Create" component={UploadScreen} />
+            <Tab.Screen name="Gallery" component={GalleryScreen} />
+            <Tab.Screen name="Profile" component={ProfileScreen} />
+        </Tab.Navigator>
+    );
+}
+
+export default function Navigation() {
+    const [initialRoute, setInitialRoute] = useState<'Auth' | 'Main' | null>(null);
+
+    useEffect(() => {
+        AsyncStorage.getItem('drawreal_guest').then((val) => {
+            setInitialRoute(val ? 'Main' : 'Auth');
+        });
+    }, []);
+
+    if (!initialRoute) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color={theme.colors.primary} />
+            </View>
+        );
+    }
+
+    return (
+        <NavigationContainer>
+            <Stack.Navigator initialRouteName={initialRoute} screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="Auth" component={AuthScreen} />
+                <Stack.Screen name="Main" component={MainTabs} />
+                <Stack.Screen name="Upload" component={UploadScreen} />
+                <Stack.Screen name="Loading" component={LoadingScreen} options={{ gestureEnabled: false }} />
+                <Stack.Screen name="Result" component={ResultScreen} />
+                <Stack.Screen name="Credits" component={CreditsScreen} />
+            </Stack.Navigator>
+        </NavigationContainer>
+    );
+}
+
+const tabStyles = StyleSheet.create({
+    iconBase: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 32,
+    },
+});
