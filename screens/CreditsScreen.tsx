@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { theme } from '../constants/theme';
 import { RootStackParamList } from '../navigation';
+import { useAppTheme } from '../context/ThemeContext';
 
 type Nav = StackNavigationProp<RootStackParamList>;
 
@@ -50,11 +51,13 @@ import { Linking, Platform, Alert as RNAlert } from 'react-native';
 
 export default function CreditsScreen() {
     const navigation = useNavigation<Nav>();
+    const { colors } = useAppTheme();
+    const s = React.useMemo(() => getStyles(colors), [colors]);
 
     const handleBuy = async (pkgId: string, priceId: string) => {
         let paymentUrl = '';
-        if (pkgId === 'starter') paymentUrl = `https://buy.stripe.com/test_starter`;
-        else if (pkgId === 'pro') paymentUrl = `https://buy.stripe.com/test_pro`;
+        if (pkgId === 'starter') paymentUrl = `https://buy.stripe.com/dRmeVc8e2bqfeZe0jV4ZG02`;
+        else if (pkgId === 'pro') paymentUrl = `https://buy.stripe.com/7sY9ASdymfGv5oEgiT4ZG01`;
         else paymentUrl = `https://buy.stripe.com/bJeaEW2TIbqfdVa8Qr4ZG00`;
 
         if (Platform.OS === 'web') {
@@ -88,7 +91,7 @@ export default function CreditsScreen() {
             <ScrollView contentContainerStyle={s.content} showsVerticalScrollIndicator={false}>
                 {/* Hero */}
                 <LinearGradient
-                    colors={[theme.colors.primary, theme.colors.purple]}
+                    colors={[colors.primary, colors.purple]}
                     start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
                     style={s.heroBadge}
                 >
@@ -132,21 +135,21 @@ export default function CreditsScreen() {
     );
 }
 
-const s = StyleSheet.create({
-    safe: { flex: 1, backgroundColor: theme.colors.background },
+const getStyles = (colors: any) => StyleSheet.create({
+    safe: { flex: 1, backgroundColor: colors.background },
     header: {
         flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
         paddingHorizontal: 12, paddingVertical: 14,
-        backgroundColor: theme.colors.background,
-        borderBottomWidth: 1, borderBottomColor: theme.colors.border,
+        backgroundColor: colors.background,
+        borderBottomWidth: 1, borderBottomColor: colors.border,
     },
     backBtn: {
         width: 40, height: 40, borderRadius: 20,
-        backgroundColor: theme.colors.fieldGray,
+        backgroundColor: colors.fieldGray,
         alignItems: 'center', justifyContent: 'center',
     },
-    backIcon: { fontSize: 20, color: theme.colors.textPrimary },
-    headerTitle: { fontFamily: theme.fonts.bold, fontSize: 19, color: theme.colors.textPrimary },
+    backIcon: { fontSize: 20, color: colors.textPrimary },
+    headerTitle: { fontFamily: theme.fonts.bold, fontSize: 19, color: colors.textPrimary },
     content: { padding: 20, paddingBottom: 40 },
     heroBadge: {
         borderRadius: theme.radius.lg, padding: 28,
@@ -157,36 +160,36 @@ const s = StyleSheet.create({
     heroSub: { fontFamily: theme.fonts.regular, fontSize: 14, color: 'rgba(255,255,255,0.85)' },
     card: {
         borderRadius: theme.radius.lg, padding: 20,
-        borderWidth: 1.5, borderColor: theme.colors.border,
-        backgroundColor: theme.colors.cardBg, marginBottom: 16,
-        shadowColor: theme.colors.shadow, shadowOffset: { width: 0, height: 2 },
+        borderWidth: 1.5, borderColor: colors.border,
+        backgroundColor: colors.cardBg, marginBottom: 16,
+        shadowColor: colors.shadow, shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 1, shadowRadius: 6, elevation: 2,
     },
     cardHighlight: {
-        borderColor: theme.colors.primary,
-        backgroundColor: theme.colors.primaryLight,
+        borderColor: colors.primary,
+        backgroundColor: colors.primaryLight,
     },
     popularBadge: {
-        backgroundColor: theme.colors.primary,
+        backgroundColor: colors.primary,
         borderRadius: 99, paddingHorizontal: 10, paddingVertical: 4,
         alignSelf: 'flex-start', marginBottom: 12,
     },
     popularText: { fontFamily: theme.fonts.bold, fontSize: 10, color: '#fff', letterSpacing: 1 },
     cardRow: { flexDirection: 'row', alignItems: 'center', gap: 14 },
     pkgEmoji: { fontSize: 32 },
-    pkgName: { fontFamily: theme.fonts.bold, fontSize: 17, color: theme.colors.textPrimary },
-    pkgNameHL: { color: theme.colors.primary },
-    pkgCredits: { fontFamily: theme.fonts.medium, fontSize: 14, color: theme.colors.textSecondary },
-    pkgDesc: { fontFamily: theme.fonts.regular, fontSize: 12, color: theme.colors.textMuted },
+    pkgName: { fontFamily: theme.fonts.bold, fontSize: 17, color: colors.textPrimary },
+    pkgNameHL: { color: colors.primary },
+    pkgCredits: { fontFamily: theme.fonts.medium, fontSize: 14, color: colors.textSecondary },
+    pkgDesc: { fontFamily: theme.fonts.regular, fontSize: 12, color: colors.textMuted },
     buyBtn: {
         borderRadius: theme.radius.lg, paddingHorizontal: 18, paddingVertical: 12,
-        backgroundColor: theme.colors.fieldGray,
+        backgroundColor: colors.fieldGray,
     },
-    buyBtnHL: { backgroundColor: theme.colors.primary },
-    buyText: { fontFamily: theme.fonts.bold, fontSize: 15, color: theme.colors.textPrimary },
+    buyBtnHL: { backgroundColor: colors.primary },
+    buyText: { fontFamily: theme.fonts.bold, fontSize: 15, color: colors.textPrimary },
     buyTextHL: { color: '#fff' },
     note: {
         fontFamily: theme.fonts.regular, fontSize: 12,
-        color: theme.colors.textMuted, textAlign: 'center', lineHeight: 18, marginTop: 8,
+        color: colors.textMuted, textAlign: 'center', lineHeight: 18, marginTop: 8,
     },
 });

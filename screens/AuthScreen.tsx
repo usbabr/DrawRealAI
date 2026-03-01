@@ -9,12 +9,14 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { theme } from '../constants/theme';
 import { RootStackParamList } from '../navigation';
+import { useAppTheme } from '../context/ThemeContext';
 
 const { width } = Dimensions.get('window');
 type Nav = StackNavigationProp<RootStackParamList>;
 
 export default function AuthScreen() {
     const navigation = useNavigation<Nav>();
+    const { colors, isDarkMode } = useAppTheme();
 
     const continueAsGuest = async () => {
         await AsyncStorage.setItem('drawreal_guest', '1');
@@ -34,15 +36,8 @@ export default function AuthScreen() {
 
                 {/* Logo */}
                 <View style={s.logoArea}>
-                    <View style={s.iconBadge}>
-                        <Text style={s.iconText}>✏️</Text>
-                    </View>
-                    <View style={s.logoRow}>
-                        <Text style={s.logoDraw}>Draw</Text>
-                        <Text style={s.logoReal}>Real</Text>
-                        <Text style={s.logoAI}> AI</Text>
-                    </View>
-                    <Text style={s.tagline}>Turn children's drawings into{'\n'}stunning AI masterpieces ✨</Text>
+                    <Image source={require('../assets/logo_transparent.png')} style={s.mainLogoImage} resizeMode="contain" />
+                    <Text style={[s.tagline, { color: colors.textSecondary }]}>Turn children's drawings into{'\n'}stunning AI masterpieces ✨</Text>
                 </View>
 
                 {/* Feature pills */}
@@ -86,30 +81,22 @@ export default function AuthScreen() {
 
 const s = StyleSheet.create({
     safe: { flex: 1, backgroundColor: '#FFFFFF' },
-    bg: { flex: 1, justifyContent: 'space-between', paddingHorizontal: 28, paddingVertical: 40 },
+    bg: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: '#FFFFFF', // Assuming auth screen stays light or we can use colors.background dynamically
+    },
     circle1: {
-        position: 'absolute', top: -80, right: -80,
-        width: 280, height: 280, borderRadius: 140,
-        backgroundColor: theme.colors.primaryLight,
+        position: 'absolute', top: -width * 0.4, right: -width * 0.2,
+        width: width * 1.2, height: width * 1.2, borderRadius: width * 0.6,
+        backgroundColor: 'rgba(167, 139, 250, 0.08)',
     },
     circle2: {
-        position: 'absolute', bottom: 80, left: -100,
-        width: 240, height: 240, borderRadius: 120,
-        backgroundColor: theme.colors.purpleLight,
+        position: 'absolute', top: width * 0.8, left: -width * 0.4,
+        width: width, height: width, borderRadius: width * 0.5,
+        backgroundColor: 'rgba(74, 222, 128, 0.08)',
     },
-    logoArea: { alignItems: 'center', paddingTop: 20 },
-    iconBadge: {
-        width: 80, height: 80, borderRadius: 24,
-        backgroundColor: theme.colors.cardBg,
-        alignItems: 'center', justifyContent: 'center', marginBottom: 20,
-        borderWidth: 1.5, borderColor: theme.colors.border,
-        shadowColor: theme.colors.shadow, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 1, shadowRadius: 8, elevation: 4,
-    },
-    iconText: { fontSize: 38 },
-    logoRow: { flexDirection: 'row', alignItems: 'baseline', marginBottom: 16 },
-    logoDraw: { fontFamily: theme.fonts.bold, fontSize: 42, color: theme.colors.textPrimary },
-    logoReal: { fontFamily: theme.fonts.bold, fontSize: 42, color: theme.colors.primary },
-    logoAI: { fontFamily: theme.fonts.bold, fontSize: 28, color: theme.colors.purple },
+    logoArea: { alignItems: 'center', marginTop: width * 0.3, marginBottom: 40 },
+    mainLogoImage: { width: 240, height: 72, marginBottom: 16 },
     tagline: {
         fontFamily: theme.fonts.regular, fontSize: 16,
         color: theme.colors.textSecondary, textAlign: 'center', lineHeight: 24,

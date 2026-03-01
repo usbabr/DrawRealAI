@@ -3,6 +3,7 @@ import { View, Platform } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_600SemiBold, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import Navigation from './navigation';
+import { ThemeProvider } from './context/ThemeContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -32,8 +33,10 @@ export default function App() {
   if (!ready) return null;
 
   return (
-    <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-      <Navigation />
-    </View>
+    <ThemeProvider>
+      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+        <Navigation />
+      </View>
+    </ThemeProvider>
   );
 }

@@ -11,6 +11,7 @@ import { theme } from '../constants/theme';
 import { RootStackParamList } from '../navigation';
 import { loadGenerations, GenerationRecord } from '../lib/storage';
 import { MaterialIcons } from '@expo/vector-icons';
+import { useAppTheme } from '../context/ThemeContext';
 
 const { width } = Dimensions.get('window');
 type Nav = StackNavigationProp<RootStackParamList>;
@@ -30,7 +31,7 @@ const STYLES_LIST = [
 const HERO_H = width - 48; // 1:1 square for better image fitting
 
 // ─── Interactive Before/After Slider ──────────────────────────────────────────
-function HeroSlider() {
+function HeroSlider({ colors, sl }: { colors: any, sl: any }) {
     const sliderX = useRef(new Animated.Value(width / 2 - 20)).current;
     const pos = useRef(width / 2 - 20);
 
@@ -55,8 +56,8 @@ function HeroSlider() {
 
             {/* Drag line */}
             <Animated.View style={[sl.line, { left: sliderX }]} {...pan.panHandlers}>
-                <View style={sl.handle}>
-                    <MaterialIcons name="auto-fix-high" size={24} color={theme.colors.primary} />
+                <View style={[sl.handle, { backgroundColor: colors.white }]}>
+                    <MaterialIcons name="auto-fix-high" size={24} color={colors.primary} />
                 </View>
             </Animated.View>
 
@@ -96,6 +97,10 @@ const sl = StyleSheet.create({
 export default function HomeScreen() {
     const navigation = useNavigation<Nav>();
     const isFocused = useIsFocused();
+    const { colors } = useAppTheme();
+    const s = React.useMemo(() => getStyles(colors), [colors]);
+    const sl = React.useMemo(() => getSliderStyles(colors), [colors]);
+
     const [selectedStyle, setSelectedStyle] = useState('realistic');
     const [recentItems, setRecentItems] = useState<GenerationRecord[]>([]);
 
@@ -137,7 +142,7 @@ export default function HomeScreen() {
             <ScrollView style={s.scroll} showsVerticalScrollIndicator={false}>
                 {/* Hero Before/After Slider */}
                 <View style={s.section}>
-                    <HeroSlider />
+                    <HeroSlider colors={colors} sl={sl} />
                     <View style={s.heroCaption}>
                         <Text style={s.heroCaptionText}>⬅ Drag to compare before & after</Text>
                     </View>
@@ -151,7 +156,7 @@ export default function HomeScreen() {
                         activeOpacity={0.85}
                     >
                         <Text style={s.ctaTxt}>Transform a Drawing</Text>
-                        <MaterialIcons name="auto-awesome" size={22} color={theme.colors.textPrimary} />
+                        <MaterialIcons name="auto-awesome" size={22} color={colors.textPrimary} />
                     </TouchableOpacity>
                 </View>
 
@@ -220,12 +225,12 @@ export default function HomeScreen() {
 
 const CARD_W = (width - 40 - 12) / 2;
 
-const s = StyleSheet.create({
-    safe: { flex: 1, backgroundColor: theme.colors.background },
+const getStyles = (colors: any) => StyleSheet.create({
+    safe: { flex: 1, backgroundColor: colors.background },
     header: {
         flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
         paddingHorizontal: 20, paddingVertical: 14,
-        backgroundColor: theme.colors.background,
+        backgroundColor: colors.background,
         borderBottomWidth: 0,
     },
     // Logo block
@@ -234,64 +239,64 @@ const s = StyleSheet.create({
     logoTagline: {
         fontFamily: theme.fonts.regular,
         fontSize: 11,
-        color: theme.colors.textMuted,
+        color: colors.textMuted,
     },
     creditBadge: {
-        backgroundColor: theme.colors.primaryLight,
-        borderWidth: 1, borderColor: theme.colors.primaryBorder,
+        backgroundColor: colors.primaryLight,
+        borderWidth: 1, borderColor: colors.primaryBorder,
         paddingHorizontal: 16, paddingVertical: 6, borderRadius: 99,
     },
-    creditText: { fontFamily: theme.fonts.bold, fontSize: 14, color: theme.colors.primary },
+    creditText: { fontFamily: theme.fonts.bold, fontSize: 14, color: colors.primary },
     scroll: { flex: 1 },
     section: { paddingHorizontal: 20, marginTop: 20 },
     heroCaption: { alignItems: 'center', marginTop: 8 },
-    heroCaptionText: { fontFamily: theme.fonts.medium, fontSize: 12, color: theme.colors.textMuted },
+    heroCaptionText: { fontFamily: theme.fonts.medium, fontSize: 12, color: colors.textMuted },
     ctaBtn: {
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         gap: 10,
-        backgroundColor: theme.colors.primary,
+        backgroundColor: colors.primary,
         borderRadius: theme.radius.lg,
         paddingVertical: 18,
-        shadowColor: theme.colors.primary,
+        shadowColor: colors.primary,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 10,
         elevation: 6,
     },
-    ctaTxt: { fontFamily: theme.fonts.bold, fontSize: 17, color: theme.colors.textPrimary },
+    ctaTxt: { fontFamily: theme.fonts.bold, fontSize: 17, color: colors.textPrimary },
     sectionHeader: {
         flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',
         paddingHorizontal: 20, marginTop: 24, marginBottom: 12,
     },
-    sectionTitle: { fontFamily: theme.fonts.bold, fontSize: 18, color: theme.colors.textPrimary },
-    sectionBadge: { fontFamily: theme.fonts.medium, fontSize: 12, color: theme.colors.textMuted },
-    seeAll: { fontFamily: theme.fonts.bold, fontSize: 14, color: theme.colors.primary },
+    sectionTitle: { fontFamily: theme.fonts.bold, fontSize: 18, color: colors.textPrimary },
+    sectionBadge: { fontFamily: theme.fonts.medium, fontSize: 12, color: colors.textMuted },
+    seeAll: { fontFamily: theme.fonts.bold, fontSize: 14, color: colors.primary },
     stylesRow: { paddingHorizontal: 20, gap: 12, paddingBottom: 4 },
     styleCard: {
-        width: 128, height: 160, backgroundColor: theme.colors.cardBg,
+        width: 128, height: 160, backgroundColor: colors.cardBg,
         borderRadius: 16, padding: 12,
         alignItems: 'center', justifyContent: 'space-between',
-        borderWidth: 1, borderColor: theme.colors.border,
-        shadowColor: theme.colors.shadow, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 1, shadowRadius: 4, elevation: 2,
+        borderWidth: 1, borderColor: colors.border,
+        shadowColor: colors.shadow, shadowOffset: { width: 0, height: 2 }, shadowOpacity: 1, shadowRadius: 4, elevation: 2,
     },
     styleCardActive: { borderBottomColor: 'rgba(167,139,250,0.4)', borderBottomWidth: 4 },
     badgeContainer: { height: 20, justifyContent: 'center', alignItems: 'center', width: '100%', marginBottom: 2 },
     emojiCircle: {
         width: 64, height: 64, borderRadius: 32,
-        backgroundColor: theme.colors.fieldGray, alignItems: 'center', justifyContent: 'center',
+        backgroundColor: colors.fieldGray, alignItems: 'center', justifyContent: 'center',
     },
-    emojiCircleActive: { backgroundColor: theme.colors.primaryLight },
-    styleName: { fontFamily: theme.fonts.bold, fontSize: 14, color: theme.colors.textPrimary },
-    styleNameActive: { color: theme.colors.textPrimary },
-    styleDesc: { fontFamily: theme.fonts.regular, fontSize: 11, color: theme.colors.textMuted, textAlign: 'center' },
+    emojiCircleActive: { backgroundColor: colors.primaryLight },
+    styleName: { fontFamily: theme.fonts.bold, fontSize: 14, color: colors.textPrimary },
+    styleNameActive: { color: colors.textPrimary },
+    styleDesc: { fontFamily: theme.fonts.regular, fontSize: 11, color: colors.textMuted, textAlign: 'center' },
     badgePill: {
-        backgroundColor: theme.colors.purpleLight, borderRadius: 99,
+        backgroundColor: colors.purpleLight, borderRadius: 99,
         paddingHorizontal: 8, paddingVertical: 3,
     },
-    badgePillTxt: { fontFamily: theme.fonts.bold, fontSize: 9, color: theme.colors.purple },
+    badgePillTxt: { fontFamily: theme.fonts.bold, fontSize: 9, color: colors.purple },
     recentGrid: {
         flexDirection: 'row', flexWrap: 'wrap', gap: 12, paddingHorizontal: 20,
     },
@@ -299,11 +304,12 @@ const s = StyleSheet.create({
         width: CARD_W, height: CARD_W,
         borderRadius: theme.radius.lg, overflow: 'hidden',
         shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 6, elevation: 3,
+        backgroundColor: colors.fieldGray,
     },
-    recentImg: { width: '100%', height: '100%' },
+    recentImg: { width: '100%', height: '100%', backgroundColor: colors.fieldGray },
     recentOverlay: {
-        position: 'absolute', bottom: 0, left: 0, right: 0, top: 0,
-        padding: 12, justifyContent: 'flex-end',
+        position: 'absolute', bottom: 0, left: 0, right: 0,
+        height: '40%', padding: 12, justifyContent: 'flex-end',
     },
-    recentStyle: { fontFamily: theme.fonts.medium, fontSize: 12, color: '#fff' },
+    recentStyle: { fontFamily: theme.fonts.medium, fontSize: 12, color: '#fff', textTransform: 'capitalize' },
 });
