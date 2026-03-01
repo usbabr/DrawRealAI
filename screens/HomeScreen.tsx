@@ -68,10 +68,10 @@ function HeroSlider({ colors, sl }: { colors: any, sl: any }) {
     );
 }
 
-const sl = StyleSheet.create({
+const getSliderStyles = (colors: any) => StyleSheet.create({
     container: {
         height: HERO_H, borderRadius: 24, overflow: 'hidden', position: 'relative',
-        backgroundColor: theme.colors.white, shadowColor: theme.colors.primary,
+        backgroundColor: colors.white, shadowColor: colors.primary,
         shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.1, shadowRadius: 20, elevation: 8
     },
     label: {

@@ -341,5 +341,4 @@ const getStyles = (colors: any) => StyleSheet.create({
         fontSize: 12,
         color: colors.textPrimary,
     },
-},
 });
