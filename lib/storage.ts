@@ -7,6 +7,7 @@ export interface GenerationRecord {
     originalUri: string;
     generatedUri: string;
     style: string;
+    hint?: string;
     timestamp: number;
 }
 

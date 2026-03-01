@@ -77,7 +77,7 @@ export default function ProfileScreen() {
                     </View>
                     <View style={s.statDivider} />
                     <View style={s.stat}>
-                        <Text style={s.statNum}>5</Text>
+                        <Text style={s.statNum}>3</Text>
                         <Text style={s.statLabel}>Free Credits</Text>
                     </View>
                 </View>

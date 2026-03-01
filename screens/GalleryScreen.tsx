@@ -16,8 +16,22 @@ const ITEM_SIZE = (width - 48) / 2;
 type Nav = StackNavigationProp<RootStackParamList>;
 
 const PLACEHOLDER_RECORDS: GenerationRecord[] = [
-    { id: 'p1', originalUri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC_Zqe_8XMcKvZX8hkH_XX1ldx-By4-gbozmlMYsjZBs8baJEMZgd7-aklwU_hW6tcAAE3cOLOftxkC3sl_evT_HeSYC1jS_Q2l4P0dynX9sSRRraYRFsiStfdyzv1-rTr9o3eCQ6eiCu-U6J8Uo5SMf8kXQqAhHTcahaNry_rsjZUjUqNVRHYVV_2PAiPAb0mxoAQtxB5TjdFlk_esO2cy5F1hrctYJpUfxOGwokKTCGtJCitc0IUrjuw8FspIMTVudBzMU8t-bjLS', generatedUri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCEjGJeWtSQVaWAbXDkIeLynt6RIvs9VhTGT-o_vkC6gzX2qPfGCiPgbus0wsIEwdJGBQPtyh5tnSJAOl2jt9Wu0dyf3zTCRLKVRti_xH2wFI4WkmsFb70EJsvzKuu0Nt5sgmj4-ga2ErrcNed1VBMQzi3_k8WIGbsFROFZT9A0liVOzMLHeTDcCygdsSyvRPAno12azbcO7UEr6S5fVDrjwuHsXJJD_T2M7n7snjn-uR1olQPPUaBA49uXJLtDuJadKiTUYGrgoVhp', style: 'storybook', timestamp: Date.now() },
-    { id: 'p2', originalUri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBtFvzwukVmw2loauRD-OFnbh8L4Td4wFQ622ngoqcrT9PoIVJQdJpRlhaS5V0ncysymTtACq-DHFZ956Y87Z1A1S3LWOdt3k5cKaRQtbKeEadeD6nDvhbonJmlAwjQwk21259urL5lYuXKxijoIJe-lSxuB3bUysMMkBTR7WiXeEN8CJI-yIiVYJUTB4xztADvsyq9m64ZJBdivzQAeE8NUTEIzx0Znmpn5-0j9by9awzLSck12OFZiM-DH3-qlAG1NvJHOFRNqfTb', generatedUri: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDbWnMXDo-qan6bp6dC2VonvN-_4SJsXvKFh-GU6KO9aez7GFjhpKkqEQDkPapQ5Ng7qCqClhBvR76OHTWYRaeQOPJsATCUmCjs9I4tRLrxnAMPawzzcPAekA-9vbwNHvPj0VqEa-lpawdocxdfqvWKeZEfo-kHr7PF96Bx2cK3v6urTV-C3bsTbHaBqvidldJ14n3tj0M3Jc4DOmPWjfFt-qoQ6eYGzVvPAoUbI_Zy2C9xJMnIFQLN7Z0PTqHaxIg806gMSZtguvFC', style: 'realistic', timestamp: Date.now() },
+    {
+        id: 'p1',
+        originalUri: Image.resolveAssetSource(require('../assets/sample_realistic_before.png')).uri,
+        generatedUri: Image.resolveAssetSource(require('../assets/sample_realistic_after.png')).uri,
+        style: 'realistic',
+        timestamp: Date.now(),
+        hint: 'A highly detailed and fluffy golden retriever puppy'
+    },
+    {
+        id: 'p2',
+        originalUri: Image.resolveAssetSource(require('../assets/sample_storybook_before.png')).uri,
+        generatedUri: Image.resolveAssetSource(require('../assets/sample_storybook_after.png')).uri,
+        style: 'storybook',
+        timestamp: Date.now(),
+        hint: 'A magical glowing wizard tower from a classic fairy tale'
+    },
 ];
 
 export default function GalleryScreen() {
