@@ -48,7 +48,7 @@ export default function ProfileScreen() {
         { icon: '💳', label: 'Get Credits', onPress: () => navigation.navigate('Credits') },
         { icon: '🔔', label: 'Notifications', onPress: () => Alert.alert('Coming Soon', 'Notification settings coming soon!') },
         { icon: '⭐', label: 'Rate DrawReal AI', onPress: () => Alert.alert('Thank you!', 'App Store rating coming soon!') },
-        { icon: '🔒', label: 'Privacy Policy', onPress: () => Linking.openURL('https://drawreal.ai/privacy-policy') },
+        { icon: '🔒', label: 'Privacy Policy', onPress: () => Linking.openURL('https://drawreal-legal-site.vercel.app') },
         { icon: '📧', label: 'Contact Support', onPress: () => Alert.alert('Support', 'Email us at hello@drawreal.ai') },
     ];
 
