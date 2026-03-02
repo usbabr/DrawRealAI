@@ -4,7 +4,17 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_600SemiBold, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import Navigation from './navigation';
 import { ThemeProvider } from './context/ThemeContext';
-import Purchases from 'react-native-purchases';
+import Constants, { ExecutionEnvironment } from 'expo-constants';
+
+const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
+let Purchases: any = null;
+if (!isExpoGo) {
+  try {
+    Purchases = require('react-native-purchases').default;
+  } catch (e) {
+    console.warn("RevenueCat native module not available.");
+  }
+}
 
 SplashScreen.preventAutoHideAsync();
 
@@ -22,10 +32,12 @@ export default function App() {
     const t = setTimeout(() => setFontTimeout(true), 3000);
 
     // Initialize RevenueCat
-    if (Platform.OS === 'ios') {
-      Purchases.configure({ apiKey: 'sk_cwUMrJAtpAPWRmcPnnHycjreuQDkN' });
-    } else if (Platform.OS === 'android') {
-      // Android SDK config would go here if needed.
+    if (Purchases) {
+      if (Platform.OS === 'ios') {
+        Purchases.configure({ apiKey: 'sk_cwUMrJAtpAPWRmcPnnHycjreuQDkN' });
+      } else if (Platform.OS === 'android') {
+        // Android SDK config would go here if needed.
+      }
     }
 
     return () => clearTimeout(t);

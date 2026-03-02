@@ -6,7 +6,17 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import Purchases, { PurchasesPackage } from 'react-native-purchases';
+import Constants, { ExecutionEnvironment } from 'expo-constants';
+
+const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
+let Purchases: any = null;
+if (!isExpoGo) {
+    try {
+        Purchases = require('react-native-purchases').default;
+    } catch (e) { }
+}
+
+type PurchasesPackage = any;
 import { theme } from '../constants/theme';
 import { RootStackParamList } from '../navigation';
 import { useAppTheme } from '../context/ThemeContext';
@@ -27,7 +37,7 @@ export default function CreditsScreen() {
     useEffect(() => {
         const fetchOfferings = async () => {
             try {
-                if (Platform.OS !== 'ios' && Platform.OS !== 'android') {
+                if (isExpoGo || !Purchases || (Platform.OS !== 'ios' && Platform.OS !== 'android')) {
                     setLoading(false);
                     return;
                 }
