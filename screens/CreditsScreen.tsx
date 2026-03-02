@@ -25,6 +25,33 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Nav = StackNavigationProp<RootStackParamList>;
 
+const MOCK_PACKAGES = [
+    {
+        identifier: 'pkg_starter_50',
+        product: {
+            title: 'Starter Pack',
+            description: '50 Credits - Perfect to try out',
+            priceString: '$4.99'
+        }
+    },
+    {
+        identifier: 'pkg_pro_150',
+        product: {
+            title: 'Pro Pack',
+            description: '150 Credits - Most popular choice',
+            priceString: '$9.99'
+        }
+    },
+    {
+        identifier: '$rc_monthly',
+        product: {
+            title: 'Premium Monthly',
+            description: 'Unlimited AI Generations - Monthly',
+            priceString: '$19.99'
+        }
+    }
+];
+
 export default function CreditsScreen() {
     const navigation = useNavigation<Nav>();
     const { colors } = useAppTheme();
@@ -97,11 +124,14 @@ export default function CreditsScreen() {
 
                 {loading ? (
                     <ActivityIndicator size="large" color={colors.primary} style={{ marginTop: 40 }} />
-                ) : packages.length === 0 ? (
-                    <Text style={[s.subtitle, { marginTop: 40 }]}>No internet connection or App Store packages are currently unavailable.</Text>
                 ) : (
                     <View style={s.packages}>
-                        {packages.map((pkg, i) => {
+                        {packages.length === 0 && (
+                            <View style={s.offlineBanner}>
+                                <Text style={s.offlineText}>⚠️ App Store connection unavailable. Showing preview packages.</Text>
+                            </View>
+                        )}
+                        {(packages.length > 0 ? packages : MOCK_PACKAGES).map((pkg, i) => {
                             const isPro = pkg.identifier.includes('pro') || pkg.identifier.includes('50') || pkg.identifier.includes('lifetime') || pkg.identifier.includes('$rc_lifetime');
                             return (
                                 <TouchableOpacity
@@ -157,6 +187,11 @@ const getStyles = (colors: any) => StyleSheet.create({
         backgroundColor: colors.background,
         borderBottomWidth: 1, borderBottomColor: colors.border,
     },
+    offlineBanner: {
+        backgroundColor: colors.cardBg, padding: 12, borderRadius: theme.radius.md,
+        borderWidth: 1, borderColor: colors.border, marginBottom: 16
+    },
+    offlineText: { fontFamily: theme.fonts.medium, fontSize: 12, color: colors.textSecondary, textAlign: 'center' },
     backBtn: {
         width: 40, height: 40, borderRadius: 20,
         backgroundColor: colors.fieldGray,
