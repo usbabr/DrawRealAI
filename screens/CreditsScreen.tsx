@@ -92,7 +92,7 @@ export default function CreditsScreen() {
                 ) : (
                     <View style={s.packages}>
                         {packages.map((pkg, i) => {
-                            const isPro = pkg.identifier.includes('pro') || pkg.identifier.includes('50');
+                            const isPro = pkg.identifier.includes('pro') || pkg.identifier.includes('50') || pkg.identifier.includes('lifetime') || pkg.identifier.includes('$rc_lifetime');
                             return (
                                 <TouchableOpacity
                                     key={pkg.identifier}
