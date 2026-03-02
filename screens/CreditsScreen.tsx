@@ -30,24 +30,24 @@ const MOCK_PACKAGES = [
         identifier: 'pkg_starter_50',
         product: {
             title: 'Starter Pack',
-            description: '50 Credits - Perfect to try out',
+            description: '50 Credits - One time',
             priceString: '$4.99'
-        }
-    },
-    {
-        identifier: 'pkg_pro_150',
-        product: {
-            title: 'Pro Pack',
-            description: '150 Credits - Most popular choice',
-            priceString: '$9.99'
         }
     },
     {
         identifier: '$rc_monthly',
         product: {
             title: 'Premium Monthly',
-            description: 'Unlimited AI Generations - Monthly',
-            priceString: '$19.99'
+            description: 'Unlimited Generations - Monthly',
+            priceString: '$14.99'
+        }
+    },
+    {
+        identifier: '$rc_annual',
+        product: {
+            title: 'Annual Pro',
+            description: 'Unlimited Generations - 1 Year',
+            priceString: '$59.99'
         }
     }
 ];
@@ -132,22 +132,23 @@ export default function CreditsScreen() {
                             </View>
                         )}
                         {(packages.length > 0 ? packages : MOCK_PACKAGES).map((pkg, i) => {
-                            const isPro = pkg.identifier.includes('pro') || pkg.identifier.includes('50') || pkg.identifier.includes('lifetime') || pkg.identifier.includes('$rc_lifetime');
+                            const isAnnual = pkg.identifier === '$rc_annual' || pkg.identifier.includes('annual');
+                            const isPro = isAnnual || pkg.identifier.includes('pro') || pkg.identifier.includes('50') || pkg.identifier.includes('lifetime') || pkg.identifier.includes('$rc_lifetime');
                             return (
                                 <TouchableOpacity
                                     key={pkg.identifier}
-                                    style={[s.card, isPro && s.cardHighlight]}
+                                    style={[s.card, isAnnual && s.cardHighlight]}
                                     onPress={() => handleBuy(pkg)}
                                     activeOpacity={0.8}
                                     disabled={purchasing}
                                 >
-                                    {isPro && (
+                                    {isAnnual && (
                                         <LinearGradient
                                             colors={[colors.primary, colors.purple]}
                                             start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
                                             style={s.popularBadge}
                                         >
-                                            <Text style={s.popularText}>BEST VALUE</Text>
+                                            <Text style={s.popularText}>SAVE 66% - ONLY $4.99/mo</Text>
                                         </LinearGradient>
                                     )}
                                     <View style={s.cardTop}>
