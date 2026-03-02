@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Text, ActivityIndicator, View, StyleSheet } from 'react-native';
+import { Text, ActivityIndicator, View, StyleSheet, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { theme } from '../constants/theme';
 
@@ -74,20 +74,19 @@ function MainTabs() {
                     fontSize: 10,
                     textTransform: 'uppercase',
                     letterSpacing: 0.5,
-                    marginBottom: 8,
+                    marginBottom: Platform.OS === 'ios' ? 0 : 8,
                 },
                 tabBarStyle: {
                     backgroundColor: colors.background,
                     borderTopWidth: 1,
                     borderTopColor: colors.border,
-                    height: 70,
+                    minHeight: Platform.OS === 'ios' ? 88 : 70,
+                    paddingTop: 8,
+                    paddingBottom: Platform.OS === 'ios' ? 28 : 12,
                     elevation: 0,
                     shadowOpacity: 0,
                 },
-                tabBarItemStyle: {
-                    paddingTop: 8,
-                    paddingBottom: 4
-                },
+                tabBarItemStyle: {},
             })}
         >
             <Tab.Screen name="Home" component={HomeScreen} />
