@@ -9,7 +9,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '../constants/theme';
 import { RootStackParamList } from '../navigation';
-import { loadGenerations, GenerationRecord } from '../lib/storage';
+import { loadGenerations, GenerationRecord, getCredits } from '../lib/storage';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAppTheme } from '../context/ThemeContext';
 
@@ -103,11 +103,13 @@ export default function HomeScreen() {
 
     const [selectedStyle, setSelectedStyle] = useState('realistic');
     const [recentItems, setRecentItems] = useState<GenerationRecord[]>([]);
+    const [credits, setCredits] = useState<number>(3);
 
     // Reload recent creations whenever the tab is focused
     useEffect(() => {
         if (isFocused) {
             loadGenerations().then((data) => setRecentItems(data.slice(0, 4)));
+            getCredits().then(val => setCredits(val));
         }
     }, [isFocused]);
 
@@ -135,7 +137,7 @@ export default function HomeScreen() {
                     onPress={() => navigation.navigate('Credits')}
                     activeOpacity={0.85}
                 >
-                    <Text style={s.creditText}>✦ 3 Credits</Text>
+                    <Text style={s.creditText}>✦ {credits} Credits</Text>
                 </TouchableOpacity>
             </View>
 

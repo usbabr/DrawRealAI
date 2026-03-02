@@ -1,28 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import {
     View, Text, StyleSheet, TouchableOpacity,
-    ScrollView, SafeAreaView, StatusBar, Alert, Switch
+    ScrollView, SafeAreaView, StatusBar, Alert, Switch, Linking
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { theme } from '../constants/theme';
-import { loadGenerations } from '../lib/storage';
+import { loadGenerations, clearGenerations, getCredits } from '../lib/storage';
 import { RootStackParamList } from '../navigation';
 import { useAppTheme } from '../context/ThemeContext';
 
 type Nav = StackNavigationProp<RootStackParamList>;
 
 export default function ProfileScreen() {
+    const isFocused = useIsFocused();
     const navigation = useNavigation<Nav>();
     const [totalCreations, setTotalCreations] = useState(0);
+    const [credits, setCredits] = useState(3);
     const { isDarkMode, toggleDarkMode, colors } = useAppTheme();
     const s = React.useMemo(() => getStyles(colors), [colors]);
 
     useEffect(() => {
-        loadGenerations().then((g) => setTotalCreations(g.length));
-    }, []);
+        if (isFocused) {
+            loadGenerations().then((g) => setTotalCreations(g.length));
+            getCredits().then(v => setCredits(v));
+        }
+    }, [isFocused]);
 
 
 
@@ -43,9 +48,24 @@ export default function ProfileScreen() {
         { icon: '💳', label: 'Get Credits', onPress: () => navigation.navigate('Credits') },
         { icon: '🔔', label: 'Notifications', onPress: () => Alert.alert('Coming Soon', 'Notification settings coming soon!') },
         { icon: '⭐', label: 'Rate DrawReal AI', onPress: () => Alert.alert('Thank you!', 'App Store rating coming soon!') },
-        { icon: '🔒', label: 'Privacy Policy', onPress: () => Alert.alert('Privacy', 'Available at drawreal.ai/privacy') },
+        { icon: '🔒', label: 'Privacy Policy', onPress: () => Linking.openURL('https://drawreal.ai/privacy-policy') },
         { icon: '📧', label: 'Contact Support', onPress: () => Alert.alert('Support', 'Email us at hello@drawreal.ai') },
     ];
+
+    const handleDeleteAccount = () => {
+        Alert.alert('Delete Account', 'This action is irreversible. All of your creations and remaining credits will be permanently deleted. Are you sure you want to proceed?', [
+            { text: 'Cancel', style: 'cancel' },
+            {
+                text: 'Delete Permanently', style: 'destructive',
+                onPress: async () => {
+                    await clearGenerations();
+                    await AsyncStorage.removeItem('drawreal_guest');
+                    await AsyncStorage.removeItem('drawreal_credits');
+                    navigation.replace('Auth');
+                },
+            },
+        ]);
+    };
 
     return (
         <SafeAreaView style={s.safe}>
@@ -72,12 +92,7 @@ export default function ProfileScreen() {
                     </View>
                     <View style={s.statDivider} />
                     <View style={s.stat}>
-                        <Text style={s.statNum}>0</Text>
-                        <Text style={s.statLabel}>Saved</Text>
-                    </View>
-                    <View style={s.statDivider} />
-                    <View style={s.stat}>
-                        <Text style={s.statNum}>3</Text>
+                        <Text style={s.statNum}>{credits}</Text>
                         <Text style={s.statLabel}>Free Credits</Text>
                     </View>
                 </View>
@@ -120,9 +135,13 @@ export default function ProfileScreen() {
                     ))}
                 </View>
 
-                {/* Sign out */}
+                {/* Sign out & Delete */}
                 <TouchableOpacity style={s.signOutBtn} onPress={handleSignOut} activeOpacity={0.7}>
                     <Text style={s.signOutText}>Sign Out</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={s.deleteBtn} onPress={handleDeleteAccount} activeOpacity={0.7}>
+                    <Text style={s.deleteText}>Delete Account</Text>
                 </TouchableOpacity>
 
                 <Text style={s.version}>DrawReal AI v1.0.0</Text>
@@ -185,6 +204,13 @@ const getStyles = (colors: any) => StyleSheet.create({
         backgroundColor: colors.fieldGray, alignItems: 'center',
     },
     signOutText: { fontFamily: theme.fonts.bold, fontSize: 15, color: '#EF4444' },
+
+    deleteBtn: {
+        marginHorizontal: 20, marginTop: 12,
+        paddingVertical: 16, borderRadius: theme.radius.full,
+        alignItems: 'center',
+    },
+    deleteText: { fontFamily: theme.fonts.bold, fontSize: 14, color: '#ff3b30' },
 
     version: {
         fontFamily: theme.fonts.regular, fontSize: 11, color: colors.textMuted,

@@ -22,6 +22,7 @@ import { RootStackParamList } from '../navigation';
 import { saveGeneration } from '../lib/storage';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAppTheme } from '../context/ThemeContext';
+import { getCredits } from '../lib/storage';
 
 const { width } = Dimensions.get('window');
 
@@ -175,7 +176,7 @@ export default function ResultScreen({ route }: any) {
                 </View>
 
                 {/* Credits */}
-                <Text style={styles.credits}>2 credits remaining</Text>
+                <Text style={styles.credits}>{credits} credits remaining</Text>
 
                 <TouchableOpacity style={styles.shareBanner} onPress={handleShare} activeOpacity={0.85}>
                     <View style={styles.shareBannerLeft}>

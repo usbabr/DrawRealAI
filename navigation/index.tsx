@@ -74,20 +74,20 @@ function MainTabs() {
                     fontSize: 10,
                     textTransform: 'uppercase',
                     letterSpacing: 0.5,
-                    marginTop: 0,
-                    marginBottom: 6,
+                    marginBottom: 8,
                 },
                 tabBarStyle: {
                     backgroundColor: colors.background,
                     borderTopWidth: 1,
                     borderTopColor: colors.border,
-                    paddingTop: 10,
-                    paddingBottom: 10,
                     height: 70,
                     elevation: 0,
                     shadowOpacity: 0,
                 },
-                tabBarItemStyle: { paddingTop: 4, paddingBottom: 4 },
+                tabBarItemStyle: {
+                    paddingTop: 8,
+                    paddingBottom: 4
+                },
             })}
         >
             <Tab.Screen name="Home" component={HomeScreen} />

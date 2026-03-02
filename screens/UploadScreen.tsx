@@ -22,6 +22,7 @@ import { theme } from '../constants/theme';
 import { RootStackParamList } from '../navigation';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useAppTheme } from '../context/ThemeContext';
+import { getCredits, useCredit } from '../lib/storage';
 
 const { width } = Dimensions.get('window');
 
@@ -63,16 +64,28 @@ export default function UploadScreen() {
         if (!result.canceled) setSelectedImage(result.assets[0].uri);
     };
 
-    const handleGenerate = () => {
+    const handleGenerate = async () => {
         if (!selectedImage) {
             Alert.alert('No drawing selected', 'Please scan or upload a drawing first.');
             return;
         }
-        navigation.navigate('Loading', {
-            originalUri: selectedImage,
-            style: selectedStyle,
-            hint: hint.trim() || undefined,
-        });
+
+        const credits = await getCredits();
+        if (credits <= 0) {
+            navigation.navigate('Credits');
+            return;
+        }
+
+        const success = await useCredit();
+        if (success) {
+            navigation.navigate('Loading', {
+                originalUri: selectedImage,
+                style: selectedStyle,
+                hint: hint.trim() || undefined,
+            });
+        } else {
+            navigation.navigate('Credits');
+        }
     };
 
 
