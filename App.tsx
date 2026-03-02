@@ -4,17 +4,9 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_600SemiBold, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import Navigation from './navigation';
 import { ThemeProvider } from './context/ThemeContext';
-import Constants, { ExecutionEnvironment } from 'expo-constants';
+import { getPurchasesModule } from './lib/purchases';
 
-const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
-let Purchases: any = null;
-if (!isExpoGo) {
-  try {
-    Purchases = require('react-native-purchases').default;
-  } catch (e) {
-    console.warn("RevenueCat native module not available.");
-  }
-}
+const Purchases = getPurchasesModule();
 
 SplashScreen.preventAutoHideAsync();
 

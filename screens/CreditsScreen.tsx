@@ -6,15 +6,9 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import Constants, { ExecutionEnvironment } from 'expo-constants';
+import { getPurchasesModule } from '../lib/purchases';
 
-const isExpoGo = Constants.executionEnvironment === ExecutionEnvironment.StoreClient;
-let Purchases: any = null;
-if (!isExpoGo) {
-    try {
-        Purchases = require('react-native-purchases').default;
-    } catch (e) { }
-}
+const Purchases = getPurchasesModule();
 
 type PurchasesPackage = any;
 import { theme } from '../constants/theme';
@@ -64,7 +58,7 @@ export default function CreditsScreen() {
     useEffect(() => {
         const fetchOfferings = async () => {
             try {
-                if (isExpoGo || !Purchases || (Platform.OS !== 'ios' && Platform.OS !== 'android')) {
+                if (!Purchases || (Platform.OS !== 'ios' && Platform.OS !== 'android')) {
                     setLoading(false);
                     return;
                 }
@@ -82,7 +76,7 @@ export default function CreditsScreen() {
     }, []);
 
     const handleBuy = async (pkg: PurchasesPackage) => {
-        if (purchasing) return;
+        if (purchasing || !Purchases) return;
         setPurchasing(true);
         try {
             const { customerInfo, productIdentifier } = await Purchases.purchasePackage(pkg);
