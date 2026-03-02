@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const STORAGE_KEY = 'drawreal_generations';
-const CREDITS_KEY = 'drawreal_credits';
+export const CREDITS_KEY = 'drawreal_credits';
 
 export interface GenerationRecord {
     id: string;

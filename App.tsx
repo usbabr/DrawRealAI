@@ -4,6 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_600SemiBold, Poppins_700Bold } from '@expo-google-fonts/poppins';
 import Navigation from './navigation';
 import { ThemeProvider } from './context/ThemeContext';
+import Purchases from 'react-native-purchases';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -19,6 +20,14 @@ export default function App() {
   const [fontTimeout, setFontTimeout] = useState(false);
   useEffect(() => {
     const t = setTimeout(() => setFontTimeout(true), 3000);
+
+    // Initialize RevenueCat
+    if (Platform.OS === 'ios') {
+      Purchases.configure({ apiKey: 'sk_cwUMrJAtpAPWRmcPnnHycjreuQDkN' });
+    } else if (Platform.OS === 'android') {
+      // Android SDK config would go here if needed.
+    }
+
     return () => clearTimeout(t);
   }, []);
 
