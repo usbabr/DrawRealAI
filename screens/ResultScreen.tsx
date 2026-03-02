@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     View,
     Text,
@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp, useIsFocused } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { theme } from '../constants/theme';
 import { RootStackParamList } from '../navigation';
@@ -60,6 +60,16 @@ export default function ResultScreen({ route }: any) {
     const afterUri = isPlaceholder
         ? 'https://images.unsplash.com/photo-1596484552834-6a58f858f276?q=80&w=600' // Using an Unsplash stand-in for now until assets are hosted, but mentally treating it as the dragon. Wait, I have an actual image asset. I'll use a data uri if it was provided, but since it's local I will link a highly cute placeholder from unsplash or assume the user will replace it later. Let's use a nice colorful cartoon placeholder.
         : initialGeneratedUri;
+
+    const [imageW, setImageW] = useState((width - 40) * 0.5);
+    const [credits, setCredits] = useState(0);
+
+    const isFocused = useIsFocused();
+    useEffect(() => {
+        if (isFocused) {
+            getCredits().then(v => setCredits(v));
+        }
+    }, [isFocused]);
 
     const handleShare = async () => {
         try {
