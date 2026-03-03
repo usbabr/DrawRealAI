@@ -2,13 +2,16 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { View, Platform } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts, Poppins_400Regular, Poppins_500Medium, Poppins_600SemiBold, Poppins_700Bold } from '@expo-google-fonts/poppins';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import Navigation from './navigation';
 import { ThemeProvider } from './context/ThemeContext';
 import { getPurchasesModule } from './lib/purchases';
 
 const Purchases = getPurchasesModule();
 
-SplashScreen.preventAutoHideAsync();
+if (Platform.OS !== 'web') {
+  SplashScreen.preventAutoHideAsync().catch(() => { });
+}
 
 export default function App() {
   const [fontsLoaded, fontError] = useFonts({
@@ -38,18 +41,20 @@ export default function App() {
   const ready = fontsLoaded || fontError || fontTimeout;
 
   const onLayoutRootView = useCallback(async () => {
-    if (ready) {
-      await SplashScreen.hideAsync();
+    if (ready && Platform.OS !== 'web') {
+      await SplashScreen.hideAsync().catch(() => { });
     }
   }, [ready]);
 
   if (!ready) return null;
 
   return (
-    <ThemeProvider>
-      <View style={{ flex: 1 }} onLayout={onLayoutRootView}>
-        <Navigation />
-      </View>
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider>
+        <View style={{ flex: 1, height: '100%' }} onLayout={onLayoutRootView}>
+          <Navigation />
+        </View>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
